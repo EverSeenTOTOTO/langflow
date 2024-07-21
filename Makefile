@@ -8,10 +8,10 @@ DOCKERFILE_FRONTEND=docker/frontend/build_and_push_frontend.Dockerfile
 DOCKER_COMPOSE=docker_example/docker-compose.yml
 
 log_level ?= debug
-host ?= 0.0.0.0
-port ?= 7860
+host ?= localhost
+port ?= 54321
 env ?= .env
-open_browser ?= true
+open_browser ?= false
 path = src/backend/base/langflow/frontend
 workers ?= 1
 

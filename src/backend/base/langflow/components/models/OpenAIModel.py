@@ -54,8 +54,9 @@ class OpenAIModelComponent(LCModelComponent):
         StrInput(
             name="openai_api_base",
             display_name="OpenAI API Base",
-            advanced=True,
+            advanced=False,
             info="The base URL of the OpenAI API. Defaults to https://api.openai.com/v1. You can change this to use other APIs like JinaChat, LocalAI and Prem.",
+            value="OPENAI_API_BASE",
         ),
         SecretStrInput(
             name="api_key",
