@@ -1,7 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Cookies } from "react-cookie";
 import { ErrorBoundary } from "react-error-boundary";
-import { useNavigate } from "react-router-dom";
 import "reactflow/dist/style.css";
 import "./App.css";
 import AlertDisplayArea from "./alerts/displayArea";
@@ -156,7 +155,6 @@ export default function App() {
           </Case>
         </>
       </ErrorBoundary>
-      <div></div>
       <div className="app-div">
         <AlertDisplayArea />
       </div>

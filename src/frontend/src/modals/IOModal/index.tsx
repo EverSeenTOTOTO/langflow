@@ -2,7 +2,6 @@ import {
   useDeleteMessages,
   useGetMessagesQuery,
 } from "@/controllers/API/queries/messages";
-import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import AccordionComponent from "../../components/accordionComponent";
 import IconComponent from "../../components/genericIconComponent";
@@ -158,16 +157,6 @@ export default function IOModal({
     setSelectedTab(inputs.length > 0 ? 1 : outputs.length > 0 ? 2 : 0);
   }, [allNodes.length]);
 
-  const flow_sessions = allNodes.map((node) => {
-    if ((node.data as NodeDataType).node?.template["session_id"]) {
-      return {
-        id: node.id,
-        session_id: (node.data as NodeDataType).node?.template["session_id"]
-          .value,
-      };
-    }
-  });
-
   useEffect(() => {
     const sessions = new Set<string>();
     messages
@@ -181,7 +170,7 @@ export default function IOModal({
 
   return (
     <BaseModal
-      size={"md-thin"}
+      size="md-thin"
       open={open}
       setOpen={setOpen}
       disable={disable}
@@ -204,7 +193,7 @@ export default function IOModal({
           <div className="flex-max-width h-full">
             <div
               className={cn(
-                "mr-6 flex h-full w-2/6 flex-shrink-0 flex-col justify-start transition-all duration-300",
+                "mr-6 flex h-full w-1/4 flex-shrink-0 flex-col justify-start transition-all duration-300",
               )}
             >
               <Tabs
@@ -411,31 +400,6 @@ export default function IOModal({
                                 </div>
                               </ShadTooltip>
                             </Button>
-                            {/* <div>
-                              <ShadTooltip
-                                styleClasses="z-50"
-                                content={
-                                  flow_sessions.some(
-                                    (f_session) =>
-                                      f_session?.session_id === session,
-                                  )
-                                    ? "Active Session"
-                                    : "Inactive Session"
-                                }
-                              >
-                                <div
-                                  className={cn(
-                                    "h-2 w-2 rounded-full",
-                                    flow_sessions.some(
-                                      (f_session) =>
-                                        f_session?.session_id === session,
-                                    )
-                                      ? "bg-status-green"
-                                      : "bg-slate-500",
-                                  )}
-                                ></div>
-                              </ShadTooltip>
-                            </div> */}
                           </div>
                         </div>
                       </div>
@@ -470,31 +434,31 @@ export default function IOModal({
                     {inputs.some(
                       (input) => input.id === selectedViewField.id,
                     ) && (
-                      <IOFieldView
-                        type={InputOutput.INPUT}
-                        left={false}
-                        fieldType={selectedViewField.type!}
-                        fieldId={selectedViewField.id!}
-                      />
-                    )}
+                        <IOFieldView
+                          type={InputOutput.INPUT}
+                          left={false}
+                          fieldType={selectedViewField.type!}
+                          fieldId={selectedViewField.id!}
+                        />
+                      )}
                     {outputs.some(
                       (output) => output.id === selectedViewField.id,
                     ) && (
-                      <IOFieldView
-                        type={InputOutput.OUTPUT}
-                        left={false}
-                        fieldType={selectedViewField.type!}
-                        fieldId={selectedViewField.id!}
-                      />
-                    )}
+                        <IOFieldView
+                          type={InputOutput.OUTPUT}
+                          left={false}
+                          fieldType={selectedViewField.type!}
+                          fieldId={selectedViewField.id!}
+                        />
+                      )}
                     {sessions.some(
                       (session) => session === selectedViewField.id,
                     ) && (
-                      <SessionView
-                        session={selectedViewField.id}
-                        id={currentFlow!.id}
-                      />
-                    )}
+                        <SessionView
+                          session={selectedViewField.id}
+                          id={currentFlow!.id}
+                        />
+                      )}
                   </div>
                 </div>
               )}

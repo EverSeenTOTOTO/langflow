@@ -3,7 +3,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Markdown from "react-markdown";
 import rehypeMathjax from "rehype-mathjax";
 import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
 import MaleTechnology from "../../../../../assets/male-technologist.png";
 import Robot from "../../../../../assets/robot.png";
 import CodeTabsComponent from "../../../../../components/codeTabsComponent";
@@ -14,7 +13,6 @@ import {
   EMPTY_OUTPUT_SEND_MESSAGE,
 } from "../../../../../constants/constants";
 import useAlertStore from "../../../../../stores/alertStore";
-import useFlowStore from "../../../../../stores/flowStore";
 import { chatMessagePropsType } from "../../../../../types/components";
 import { classNames, cn } from "../../../../../utils/utils";
 import FileCardWrapper from "./components/fileCardWrapper";
@@ -26,7 +24,6 @@ export default function ChatMessage({
   updateChat,
   setLockChat,
 }: chatMessagePropsType): JSX.Element {
-  const [showFile, setShowFile] = useState<boolean>(true);
   const convert = new Convert({ newline: true });
   const [hidden, setHidden] = useState(true);
   const template = chat.template;
@@ -38,7 +35,6 @@ export default function ChatMessage({
   const [chatMessage, setChatMessage] = useState(chatMessageString);
   const [isStreaming, setIsStreaming] = useState(false);
   const eventSource = useRef<EventSource | undefined>(undefined);
-  const updateFlowPool = useFlowStore((state) => state.updateFlowPool);
   const setErrorData = useAlertStore((state) => state.setErrorData);
   const chatMessageRef = useRef(chatMessage);
 
@@ -192,7 +188,7 @@ export default function ChatMessage({
                             remarkPlugins={[remarkGfm]}
                             rehypePlugins={[rehypeMathjax]}
                             className={cn(
-                              "markdown prose flex flex-col word-break-break-word dark:prose-invert",
+                              "markdown prose mt-0 flex flex-col word-break-break-word dark:prose-invert",
                               chatMessage === ""
                                 ? "text-chat-trigger-disabled"
                                 : "text-primary",
@@ -244,7 +240,7 @@ export default function ChatMessage({
                                       },
                                     ]}
                                     activeTab={"0"}
-                                    setActiveTab={() => {}}
+                                    setActiveTab={() => { }}
                                   />
                                 ) : (
                                   <code className={className} {...props}>
@@ -295,33 +291,33 @@ export default function ChatMessage({
                 >
                   {promptOpen
                     ? template?.split("\n")?.map((line, index) => {
-                        const regex = /{([^}]+)}/g;
-                        let match;
-                        let parts: Array<JSX.Element | string> = [];
-                        let lastIndex = 0;
-                        while ((match = regex.exec(line)) !== null) {
-                          // Push text up to the match
-                          if (match.index !== lastIndex) {
-                            parts.push(line.substring(lastIndex, match.index));
-                          }
-                          // Push div with matched text
-                          if (chat.message[match[1]]) {
-                            parts.push(
-                              <span className="chat-message-highlight">
-                                {chat.message[match[1]]}
-                              </span>,
-                            );
-                          }
+                      const regex = /{([^}]+)}/g;
+                      let match;
+                      let parts: Array<JSX.Element | string> = [];
+                      let lastIndex = 0;
+                      while ((match = regex.exec(line)) !== null) {
+                        // Push text up to the match
+                        if (match.index !== lastIndex) {
+                          parts.push(line.substring(lastIndex, match.index));
+                        }
+                        // Push div with matched text
+                        if (chat.message[match[1]]) {
+                          parts.push(
+                            <span className="chat-message-highlight">
+                              {chat.message[match[1]]}
+                            </span>,
+                          );
+                        }
 
-                          // Update last index
-                          lastIndex = regex.lastIndex;
-                        }
-                        // Push text after the last match
-                        if (lastIndex !== line.length) {
-                          parts.push(line.substring(lastIndex));
-                        }
-                        return <p>{parts}</p>;
-                      })
+                        // Update last index
+                        lastIndex = regex.lastIndex;
+                      }
+                      // Push text after the last match
+                      if (lastIndex !== line.length) {
+                        parts.push(line.substring(lastIndex));
+                      }
+                      return <p>{parts}</p>;
+                    })
                     : chatMessage === ""
                       ? EMPTY_INPUT_SEND_MESSAGE
                       : chatMessage}
@@ -330,11 +326,10 @@ export default function ChatMessage({
             ) : (
               <div className="flex flex-col">
                 <span
-                  className={`prose word-break-break-word dark:prose-invert ${
-                    chatMessage === ""
+                  className={`prose word-break-break-word dark:prose-invert ${chatMessage === ""
                       ? "text-chat-trigger-disabled"
                       : "text-primary"
-                  }`}
+                    }`}
                   data-testid={
                     "chat-message-" + chat.sender_name + "-" + chatMessage
                   }

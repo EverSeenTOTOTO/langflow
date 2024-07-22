@@ -184,7 +184,7 @@ backend: ## run the backend in development mode
 	@echo 'Setting up the environment'
 	@make setup_env
 	make install_backend
-	@-kill -9 $$(lsof -t -i:7860)
+	@-kill -9 $$(lsof -t -i:$(port))
 ifdef login
 	@echo "Running backend autologin is $(login)";
 	LANGFLOW_AUTO_LOGIN=$(login) poetry run uvicorn \
