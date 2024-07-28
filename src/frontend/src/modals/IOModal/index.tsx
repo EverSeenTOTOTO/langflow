@@ -21,7 +21,7 @@ import useFlowStore from "../../stores/flowStore";
 import useFlowsManagerStore from "../../stores/flowsManagerStore";
 import { useMessagesStore } from "../../stores/messagesStore";
 import { IOModalPropsType } from "../../types/components";
-import { NodeDataType, NodeType } from "../../types/flow";
+import { NodeType } from "../../types/flow";
 import { cn } from "../../utils/utils";
 import BaseModal from "../baseModal";
 import IOFieldView from "./components/IOFieldView";
@@ -156,6 +156,10 @@ export default function IOModal({
   useEffect(() => {
     setSelectedTab(inputs.length > 0 ? 1 : outputs.length > 0 ? 2 : 0);
   }, [allNodes.length]);
+
+  useEffect(() => {
+    refetch();
+  }, [open]);
 
   useEffect(() => {
     const sessions = new Set<string>();
@@ -353,6 +357,7 @@ export default function IOModal({
                   {sessions.map((session, index) => {
                     return (
                       <div
+                        key={index}
                         className="file-component-accordion-div cursor-pointer"
                         onClick={(event) => {
                           event.stopPropagation();
@@ -405,6 +410,11 @@ export default function IOModal({
                       </div>
                     );
                   })}
+                  {!sessions.length && (
+                    <span className="text-sm text-muted-foreground">
+                      No memories available.
+                    </span>
+                  )}
                 </TabsContent>
               </Tabs>
             </div>
