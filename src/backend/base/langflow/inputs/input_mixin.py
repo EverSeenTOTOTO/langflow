@@ -26,10 +26,14 @@ SerializableFieldTypes = Annotated[FieldTypes, PlainSerializer(lambda v: v.value
 
 
 # Base mixin for common input field attributes and methods
-class BaseInputMixin(BaseModel, validate_assignment=True):
-    model_config = ConfigDict(arbitrary_types_allowed=True, extra="forbid")
+class BaseInputMixin(BaseModel, validate_assignment=True):  # type: ignore
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True,
+        extra="forbid",
+        populate_by_name=True,
+    )
 
-    field_type: Optional[SerializableFieldTypes] = Field(default=FieldTypes.TEXT)
+    field_type: SerializableFieldTypes = Field(default=FieldTypes.TEXT, alias="type")
 
     required: bool = False
     """Specifies if the field is required. Defaults to False."""
@@ -40,11 +44,11 @@ class BaseInputMixin(BaseModel, validate_assignment=True):
     show: bool = True
     """Should the field be shown. Defaults to True."""
 
+    name: str = Field(description="Name of the field.")
+    """Name of the field. Default is an empty string."""
+
     value: Any = ""
     """The value of the field. Default is an empty string."""
-
-    name: Optional[str] = None
-    """Name of the field. Default is an empty string."""
 
     display_name: Optional[str] = None
     """Display name of the field. Defaults to None."""
@@ -78,9 +82,10 @@ class BaseInputMixin(BaseModel, validate_assignment=True):
     @field_validator("field_type", mode="before")
     @classmethod
     def validate_field_type(cls, v):
-        if v not in FieldTypes:
+        try:
+            return FieldTypes(v)
+        except ValueError:
             return FieldTypes.OTHER
-        return FieldTypes(v)
 
     @model_serializer(mode="wrap")
     def serialize_model(self, handler):
@@ -101,7 +106,7 @@ class MetadataTraceMixin(BaseModel):
 
 # Mixin for input fields that can be listable
 class ListableInputMixin(BaseModel):
-    is_list: bool = Field(default=False, serialization_alias="list")
+    is_list: bool = Field(default=False, alias="list")
 
 
 # Specific mixin for fields needing database interaction
@@ -112,7 +117,7 @@ class DatabaseLoadMixin(BaseModel):
 # Specific mixin for fields needing file interaction
 class FileMixin(BaseModel):
     file_path: Optional[str] = Field(default="")
-    file_types: list[str] = Field(default=[], serialization_alias="fileTypes")
+    file_types: list[str] = Field(default=[], alias="fileTypes")
 
     @field_validator("file_types")
     @classmethod

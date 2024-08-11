@@ -56,7 +56,7 @@ export type DropDownComponentType = {
   value: string;
   combobox?: boolean;
   options: string[];
-  onSelect: (value: string) => void;
+  onSelect: (value: string, dbValue?: boolean, snapshot?: boolean) => void;
   editNode?: boolean;
   id?: string;
   children?: ReactNode;
@@ -67,7 +67,7 @@ export type MultiselectComponentType = {
   value: string[];
   combobox?: boolean;
   options: string[];
-  onSelect: (value: string[]) => void;
+  onSelect: (value: string[], dbValue?: boolean, snapshot?: boolean) => void;
   editNode?: boolean;
   id?: string;
   children?: ReactNode;
@@ -94,9 +94,39 @@ export type ParameterComponentType = {
   outputName?: string;
   outputProxy?: OutputFieldProxyType;
 };
+
+export type NodeOutputFieldComponentType = {
+  selected: boolean;
+  data: NodeDataType;
+  title: string;
+  id: sourceHandleType;
+  colors: string[];
+  tooltipTitle: string | undefined;
+  showNode: boolean;
+  index: number;
+  type: string | undefined;
+  outputName?: string;
+  outputProxy?: OutputFieldProxyType;
+};
+
+export type NodeInputFieldComponentType = {
+  id: targetHandleType;
+  data: NodeDataType;
+  tooltipTitle: string | undefined;
+  title: string;
+  colors: string[];
+  type: string | undefined;
+  name: string;
+  required: boolean;
+  optionalHandle: Array<String> | undefined | null;
+  info: string;
+  proxy: { field: string; id: string } | undefined;
+  showNode: boolean;
+};
+
 export type InputListComponentType = {
   value: string[];
-  onChange: (value: string[]) => void;
+  onChange: (value: string[], dbValue?: boolean, snapshot?: boolean) => void;
   disabled: boolean;
   editNode?: boolean;
   componentName?: string;
@@ -451,6 +481,7 @@ export type patchUserInputStateType = {
   cnfPassword: string;
   profilePicture: string;
   apikey: string;
+  gradient?: any;
 };
 
 export type UserInputType = {
